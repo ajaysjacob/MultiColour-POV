@@ -35,13 +35,15 @@ void setup() {
   pinMode( xblank, OUTPUT);
   pinMode(gslat, OUTPUT);
 
-  TCCR1A = bit (COM1A0);  // toggle OC1A on Compare Match
+  /*TCCR1A = bit (COM1A0);  // toggle OC1A on Compare Match
   TCCR1B = bit (WGM12) | bit (CS10);   // CTC, no prescaling
   OCR1A =  0; 
-  
+  */
   digitalWrite( xblank, LOW);
   digitalWrite( gslat, LOW);
-  analogWrite(dat,255);
+  digitalWrite( CLOCKOUT, LOW);
+  
+  digitalWrite(dat,HIGH);
   DotCorrection();
   interrupts();
 }
@@ -52,26 +54,18 @@ void loop() {
 
 void send_data()
 {
-  digitalWrite( gslat, LOW);
-  delay(10);
-  /*
-  SPI.begin();
-  for(int j=0; j<NO_OF_ICS;j++)
-  {
- //   Serial.println("sendata() accessed");
-    for (int i=0; i<36; i++) //Transfer 48 data bytes
-    {
-     //SPI.transfer((uint8_t)((data[i])&255));
-      SPI.transfer((uint8_t)(pgm_read_word(&data[i])&255));
-    }
-    Serial.println("Action Completed")  ;
-  }
-  
+  digitalWrite(gslat, LOW);
   delay(10);
   digitalWrite( gslat, HIGH);
-  //digitalWrite(xblank, LOW);
-  */ 
-  
+  delay(10);
+  digitalWrite(gslat,LOW);
+  delay(10);
+  for(int i=1;i<=288;i++){
+    digitalWrite(CLOCKOUT,LOW);
+    delay(10);
+    digitalWrite(CLOCKOUT,HIGH);
+    delay(10);
+  }
 }
 void DotCorrection()
 {
